@@ -1,0 +1,18 @@
+// Naive solution
+NUMBER
+PUSH1 0
+MSTORE // Store NUMBER at memory position 0
+PUSH1 32
+PUSH1 0
+RETURN
+
+// Optimised
+NUMBER
+CALLDATASIZE // I think this assumes function has no calldata, but it's a workaround to PUSH1 0
+// Stack looks like `|     0     | block.number `, so MSTORE will store block.number in memory at offset 0
+MSTORE 
+
+MSIZE // Push active memory to stack, because we've stored the block number (1 slot), active memory is 1 slot
+CALLDATASIZE // Same as above
+// Stack looks like `|     0     |      32     `, so RETURN will return whatever is in memory from offset 0 to offset 32
+RETURN 
